@@ -1,5 +1,7 @@
 const fs = require('fs'); //converting to json
 
+const {exec} = require('child_process'); 
+
 const numberOfCordinates = 30
 
 //a location in banglore
