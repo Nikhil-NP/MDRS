@@ -1,0 +1,13 @@
+the basic file structure:
+mdrs:
+    backend:
+        server.js
+        data.json
+        route_solver.py
+    frontend:
+        index.html
+    package.json
+    .gitignore
+    README.md
+
+    
