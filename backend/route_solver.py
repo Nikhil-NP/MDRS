@@ -35,4 +35,37 @@ def create_data_model():
     }
 
 data = create_data_model()
-print(data)
+
+#mapping realdata notes to or-internal indecied
+manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),data['num_vehicles'],data['depot'])
+#solving
+routing = pywrapcp.RoutingModel(manager)
+
+
+#getting distnace between points from  distance_matrix
+def distance_callback(from_index,to_index):
+    return data['distance_matrix'][manager.IndexToNode(from_index)][manager.IndexToNode(to_index)]
+
+transit_callback_index = routing.RegisterTransitCallback(distance_callback)
+routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+
+search_parameters = pywrapcp.DefaultRoutingSearchParameters()
+search_parameters.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
+
+
+solution = routing.SolveWithParameters(search_parameters)
+
+routes = []
+if solution:
+    for vehicle_id in range(data['num_vehicles']):
+        route = []
+        index = routing.Start(vehicle_id)
+        while not routing.IsEnd(index):
+            node_index = manager.IndexToNode(index)
+            route.append(manager.IndexToNode(index))
+            routes.append(route)
+output = {
+    "routes" : routes,
+    "coordinates":coords
+}
+print(json.dumps(output))
