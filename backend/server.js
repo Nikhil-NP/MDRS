@@ -1,6 +1,9 @@
 const fs = require('fs'); //converting to json
 
-const {exec} = require('child_process'); 
+const {exec} = require('child_process'); // to run the route_solver.py code in here itself
+const { error } = require('console');
+const { stdout, stderr } = require('process');
+
 
 const numberOfCordinates = 30
 
@@ -31,3 +34,20 @@ const final_res = {
 
 //saving to json,the first will always be the 
 fs.writeFileSync('data.json',JSON.stringify(res,null,2));
+
+
+exec('python route_solver.py',(error,stdout,stderr) =>{
+    if(error){//erorr in nodejs
+        console.log(`python error: ${error.message}`);
+        return;
+    }
+    if (stderr) {//erro in .py script
+        console.log(`python stderr : ${stderr}`);
+        return;
+    }
+
+
+    const routeData = JSON.parse(stdout);
+    fs.writeFileSync('../frontend/routes.json',JSON.stringify(routeData,null,2))
+    console.log('routes saved in frontend/routes.json');
+});
