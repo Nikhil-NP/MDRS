@@ -4,7 +4,7 @@ from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
 # Read coordinates
-with open('data.json') as f:
+with open('data2.json') as f:
     coords = json.load(f)
 
 # Compute distance matrix
@@ -40,6 +40,13 @@ def distance_callback(from_index, to_index):
 
 transit_callback_index = routing.RegisterTransitCallback(distance_callback)
 routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
+routing.AddDimension(
+    transit_callback_index,
+    0,  # no slack
+    10000,  # maximum distance (example: 10 km per vehicle)
+    True,  # start cumul to zero
+    'Distance'
+)
 
 search_parameters = pywrapcp.DefaultRoutingSearchParameters()
 search_parameters.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC

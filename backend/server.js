@@ -7,16 +7,16 @@ const { stdout, stderr } = require('process');
 
 const numberOfCordinates = 30
 
-//a location in banglore
-const fixed_location = {lat:12.978792960040103,lng:77.59158937690144};
+//a location in pune
+const fixed_location = {lat:18.49476,lng:73.890154};
 
 function randomCordinateGenerator(numberOfCordinates){
     let cords = [fixed_location]; //for now only the fixed location in the res
 
     for (let i = 0; i < numberOfCordinates; i++) {
         //basic fn that will find random location around a specific point
-        let lat = fixed_location.lat + Math.random() * 0.04; // 4km approx
-        let lng = fixed_location.lng + Math.random() * 0.04;
+        let lat = fixed_location.lat + Math.random() * 0.03; // 4km approx
+        let lng = fixed_location.lng + Math.random() * 0.03;
         cords.push({lat,lng});  
     }
     return cords
@@ -33,7 +33,7 @@ const final_res = {
 };
 
 //saving to json,the first will always be the 
-fs.writeFileSync('data.json',JSON.stringify(res,null,2));
+fs.writeFileSync('data2.json',JSON.stringify(res,null,2));
 
 
 exec('python route_solver.py',(error,stdout,stderr) =>{
@@ -48,6 +48,6 @@ exec('python route_solver.py',(error,stdout,stderr) =>{
 
 
     const routeData = JSON.parse(stdout);
-    fs.writeFileSync('../frontend/routes.json',JSON.stringify(routeData,null,2))
+    fs.writeFileSync('../frontend/routes4.json',JSON.stringify(routeData,null,2))
     console.log('routes saved in frontend/routes.json');
 });
