@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Delivery Routes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 500px;
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body class="container py-5">
+  <h1 class="mb-4">🚚 Delivery Routes with Map</h1>
+  <div id="map"></div>
+  <div id="routes" class="row"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    fetch('./routes.json')
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById('routes');
+        const map = L.map('map').setView([data.coordinates[0].lat, data.coordinates[0].lng], 13);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Colors for each vehicle route
+        const colors = ['red', 'green', 'blue'];
+
+        // Draw routes
+        data.routes.forEach((route, i) => {
+          const stops = route.map(idx => {
+            const { lat, lng } = data.coordinates[idx];
+            return [lat, lng];
+          });
+
+          // Add polyline for route
+          L.polyline(stops, { color: colors[i % colors.length], weight: 4 }).addTo(map);
+
+          // Add markers
+          stops.forEach((coord, index) => {
+            const markerText = index === 0 ? `Depot (Route ${i + 1})` : `Stop ${index}`;
+            L.marker(coord).bindPopup(markerText).addTo(map);
+          });
+
+          // List below map
+          const stopsList = route.map(idx => {
+            const { lat, lng } = data.coordinates[idx];
+            return `<li>Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}</li>`;
+          }).join('');
+
+          container.innerHTML += `
+            <div class="col-md-4">
+              <div class="card mb-3">
+                <div class="card-header bg-${colors[i % colors.length]} text-white">Route ${i + 1}</div>
+                <div class="card-body">
+                  <ul>${stopsList}</ul>
+                </div>
+              </div>
+            </div>`;
+        });
+      });
+  </script>
+</body>
+</html>
