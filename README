@@ -1,15 +1,15 @@
-the basic file structure:
-mdrs:
-    backend:
-        server.js
-        data.json
-        route_solver.py
-    frontend:
-        index.html
-        routes.json //mutliple .json files with routes
+ 🚚 Multi-Vehicle Delivery Route Visualizer
 
-    package.json
-    .gitignore
-    README.md
+This project is a web-based tool that visualizes optimized delivery routes for multiple vehicles using Leaflet.js and OR-Tools.
+
+The backend is written in javascipt and Python using Google OR-Tools. This frontend only shows a static JSON output (`routes4.json`) from that backend.
+
+---
+
+### 🔗 Socials
+- GitHub: [your-username](https://github.com/Nikhil-NP)
+
+
+
 
     

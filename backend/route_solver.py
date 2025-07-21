@@ -43,7 +43,7 @@ routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 routing.AddDimension(
     transit_callback_index,
     0,  # no slack
-    10000,  # maximum distance (example: 10 km per vehicle)
+    13000,  # maximum distance (example: 10 km per vehicle)
     True,  # start cumul to zero
     'Distance'
 )
@@ -51,11 +51,14 @@ routing.AddDimension(
 search_parameters = pywrapcp.DefaultRoutingSearchParameters()
 search_parameters.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PATH_CHEAPEST_ARC
 
+
+
 solution = routing.SolveWithParameters(search_parameters)
 
 routes = []
 if solution:
     for vehicle_id in range(data['num_vehicles']):
+        #routing.SetFixedCostOfVehicle(1000) #trying to utlize all the needs
         route = []
         index = routing.Start(vehicle_id)
         while not routing.IsEnd(index):
