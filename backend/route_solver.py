@@ -3,9 +3,10 @@ import math
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 
-# Read coordinates
+# data extraction
 with open('data2.json') as f:
-    coords = json.load(f)
+    coords = json.load(f['fixed_location'])
+
 
 # Compute distance matrix
 def haversine(lat1, lon1, lat2, lon2):
@@ -17,12 +18,15 @@ def haversine(lat1, lon1, lat2, lon2):
         math.cos(math.radians(lat2)) * math.sin(dlon / 2)**2
     return R * 2 * math.asin(math.sqrt(a)) * 1000  # in meters
 
+
+
 distance_matrix = []
 for from_node in coords:
     row = []
     for to_node in coords:
         row.append(int(haversine(from_node['lat'], from_node['lng'], to_node['lat'], to_node['lng'])))
     distance_matrix.append(row)
+
 
 def create_data_model():
     return {
