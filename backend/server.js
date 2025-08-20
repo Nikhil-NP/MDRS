@@ -5,9 +5,9 @@ const { error } = require('console');
 const { stdout, stderr } = require('process');
 
 
-const numberOfCordinates = 30
+const numberOfCordinates = 20
 const numberOfVehicles = 3
-const maxDistancePerVehicle = 20; //5km for now : needs to be more dynamic like distance based for devices
+const maxDistancePerVehicle = 50000; //50kkm for now : needs to be more dynamic like distance based for devices
 const range = 0.05 //currently 5km range
 
 
