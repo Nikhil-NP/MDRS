@@ -7,7 +7,7 @@ const { stdout, stderr } = require('process');
 
 const numberOfCordinates = 30
 const numberOfVehicles = 3
-const maxDistancePerVehicle = 5; //5km for now : needs to be more dynamic like distance based for devices
+const maxDistancePerVehicle = 20; //5km for now : needs to be more dynamic like distance based for devices
 const range = 0.05 //currently 5km range
 
 
@@ -31,7 +31,6 @@ let diliveryPoints = randomCordinateGenerator(numberOfCordinates);
 
 //organing it better:not using for now
 const final_res = {
-    fixed_location:fixed_location ,
     coordinates: diliveryPoints,
     numberOfVehicles: numberOfVehicles,
     maxDistancePerVehicle:maxDistancePerVehicle,
@@ -39,7 +38,7 @@ const final_res = {
 
 
 
-fs.writeFileSync('data2.json',JSON.stringify(final_res,null,2));
+fs.writeFileSync('data3.json',JSON.stringify(final_res,null,2));
 
 
 exec('python route_solver.py',(error,stdout,stderr) =>{

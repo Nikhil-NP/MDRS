@@ -5,7 +5,12 @@ from ortools.constraint_solver import pywrapcp
 
 # data extraction
 with open('data2.json') as f:
-    coords = json.load(f['fixed_location'])
+    
+    data = json.load(f)
+    fixed_location = data['fixed_location']
+    coords = data['coordinates']
+    numberOfVehicles = data['numberOfVehicles']
+    maxDistancePerVehicle = data['maxDistancePerVehicle']
 
 
 # Compute distance matrix
@@ -31,7 +36,7 @@ for from_node in coords:
 def create_data_model():
     return {
         'distance_matrix': distance_matrix,
-        'num_vehicles': 3,
+        'num_vehicles': numberOfVehicles,
         'depot': 0,
     }
 
@@ -47,7 +52,7 @@ routing.SetArcCostEvaluatorOfAllVehicles(transit_callback_index)
 routing.AddDimension(
     transit_callback_index,
     0,  # no slack
-    13000,  # maximum distance (example: 10 km per vehicle)
+    maxDistancePerVehicle,  # maximum distance (example: 10 km per vehicle)
     True,  # start cumul to zero
     'Distance'
 )
