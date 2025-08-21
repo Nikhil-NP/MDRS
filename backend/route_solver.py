@@ -36,7 +36,7 @@ def computeDistanceMatrix(coords):
                                         to_node['lat'],to_node['lng']
                                          )
 
-            row.append(distanceBtwNodes)
+            row.append(int(distanceBtwNodes))#passing int value
         distance_matrix.append(row)
     return distance_matrix
 
@@ -138,9 +138,8 @@ if __name__ == "__main__":
 
 
 
-
-
 '''
+
 # data extraction
 with open('data3.json') as f:
     
