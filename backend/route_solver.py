@@ -52,7 +52,9 @@ def createDataModel(coords,numberOfVehicles):
 
 def solvingVRP(coords, numberOfVehicles, maxDistancePerVehicle=None):
     """Simplified VRP with forced vehicle usage"""
-    
+
+
+    #Parameters: (total_locations, number_of_vehicles, depot_index
     data = createDataModel(coords, numberOfVehicles)
     
     manager = pywrapcp.RoutingIndexManager(len(data['distance_matrix']),
@@ -60,18 +62,24 @@ def solvingVRP(coords, numberOfVehicles, maxDistancePerVehicle=None):
                                            data['depot'])
     routing = pywrapcp.RoutingModel(manager)
     
+
+    #looks up distance between the asked nodes
     def distanceCallback(fromIndex, toIndex):
         return data['distance_matrix'][manager.IndexToNode(fromIndex)][manager.IndexToNode(toIndex)]
-    
+
+    #tells or-tools to use distancecall back function 
     transitIndex = routing.RegisterTransitCallback(distanceCallback)
+
+    #All vehicles use the same distance costs
     routing.SetArcCostEvaluatorOfAllVehicles(transitIndex)
     
     #  High penalty for unused vehicles
     for vehicle_id in range(numberOfVehicles):
-        routing.SetAmortizedCostFactorsOfVehicle(1, 100000, vehicle_id)
+        routing.SetAmortizedCostFactorsOfVehicle(1, 1000000, vehicle_id)
     
+    #this forces the device to use all the vehicles 
     if maxDistancePerVehicle:
-        routing.AddDimension(transitIndex, 0, maxDistancePerVehicle, True, 'Distance')
+       routing.AddDimension(transitIndex, 0, maxDistancePerVehicle, True, 'Distance')
     
     searchParams = pywrapcp.DefaultRoutingSearchParameters()
     searchParams.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.SAVINGS
