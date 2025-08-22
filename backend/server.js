@@ -19,7 +19,7 @@ function calculateOptimalParameters(numberOfCordinates,numberOfVehicles,range){
 }
 
 
-const numberOfCordinates = 20
+const numberOfCordinates = 8
 const numberOfVehicles = 3
 const range = 0.05 //currently 5km range
 const {maxDistancePerVehicle} = calculateOptimalParameters(numberOfCordinates,numberOfVehicles,range); //6km for now : needs to be more dynamic like distance based for devices

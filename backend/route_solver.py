@@ -73,17 +73,31 @@ def solvingVRP(coords, numberOfVehicles, maxDistancePerVehicle=None):
     #All vehicles use the same distance costs
     routing.SetArcCostEvaluatorOfAllVehicles(transitIndex)
     
+
+
+    #calc the dymaic penalty:
+    distance_matrix = data['distance_matrix']
+    avgDistance = sum(sum(row) for row in distance_matrix) / (len(coords) **2)
+    #dynamic penalty
+    vehiclePenalty = int(avgDistance * 1.5) #150% of avg distance seems fare
+    
+
     #  High penalty for unused vehicles
     for vehicle_id in range(numberOfVehicles):
-        routing.SetAmortizedCostFactorsOfVehicle(1, 1000000, vehicle_id)
+        routing.SetAmortizedCostFactorsOfVehicle(1, vehiclePenalty, vehicle_id)
     
     #this forces the device to use all the vehicles 
     if maxDistancePerVehicle:
        routing.AddDimension(transitIndex, 0, maxDistancePerVehicle, True, 'Distance')
+
+       distance_dimension = routing.GetDimensionOrDie('Distance')
+       distance_dimension.SetGlobalSpanCostCoefficient(100)  # Balance routes!
+    
     
     searchParams = pywrapcp.DefaultRoutingSearchParameters()
-    searchParams.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.SAVINGS
-    searchParams.time_limit.FromSeconds(20)
+    searchParams.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PARALLEL_CHEAPEST_INSERTION
+    searchParams.local_search_metaheuristic = routing_enums_pb2.LocalSearchMetaheuristic.GUIDED_LOCAL_SEARCH
+    searchParams.time_limit.FromSeconds(30)
     
     solution = routing.SolveWithParameters(searchParams)
     
