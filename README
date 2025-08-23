@@ -14,5 +14,30 @@ The backend is written in javascipt and Python using Google OR-Tools. This front
 
 
 
+The current planned structure:
+
+MRDS/
+├── backend/                    
+│   ├── route_solver.py
+│   └── requirements.txt
+├── frontend/                   
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── optimize/
+│   │   │       └── route.ts    # API endpoint (replaces server.js)
+│   │   ├── components/
+│   │   │   ├── RouteForm.tsx
+│   │   │   ├── MapDisplay.tsx
+│   │   │   └── RouteResults.tsx
+│   │   ├── lib/
+│   │   │   └── routeOptimizer.ts # TypeScript version of server.js logic
+│   │   ├── page.tsx           
+│   │   └── layout.tsx
+│   ├── package.json
+│   └── next.config.js
+└── README.md
+
+
+
 
     
